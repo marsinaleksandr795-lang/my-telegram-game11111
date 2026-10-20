@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мини Игра</title>
+    <!-- Обязательный скрипт Telegram -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+        }
+        #score {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 15px 40px;
+            font-size: 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 10px;
+            background-color: var(--tg-theme-button-color, #2481cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+        }
+        #send-btn {
+            margin-top: 30px;
+            background-color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div id="score">0</div>
+    <button id="click-btn">+1</button>
+    <button id="send-btn" style="display:none;">Отправить результат в бота</button>
+
+    <script>
+        // Инициализация Telegram Web App
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Развернуть на весь экран
+
+        let currentScore = 0;
+        const scoreEl = document.getElementById('score');
+        const clickBtn = document.getElementById('click-btn');
+        const sendBtn = document.getElementById('send-btn');
+
+        clickBtn.addEventListener('click', () => {
+            currentScore++;
+            scoreEl.textContent = currentScore;
+            
+            // Показываем кнопку отправки после 5 кликов (пример)
+            if (currentScore >= 5) {
+                sendBtn.style.display = 'block';
+            }
+        });
+
+        sendBtn.addEventListener('click', () => {
+            // Отправляем JSON с результатом обратно в бота
+            const data = { score: currentScore };
+            tg.sendData(JSON.stringify(data));
+            // Закрываем Mini App после отправки (опционально)
+            // tg.close(); 
+        });
+    </script>
+</body>
+</html>
